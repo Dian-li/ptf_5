@@ -10,6 +10,8 @@
 #ifndef _STEP_H
 #define _STEP_H
 
+#include "st.h"
+
 enum TStepType
 {
     ST_SEND,
@@ -25,6 +27,16 @@ enum TStepResult
     SRST_NEXTEVENT
 };
 
+enum TProtocolType
+{
+   P_UNKNOW = 0;
+   P_HTTP = 1;
+   P_TCP = 2;
+   P_UDP = 3;
+   P_FTP = 4;
+   P_RMDB = 5
+};
+
 const char* g_sStepTypeStr[]=
 {
     "send",
@@ -32,49 +44,66 @@ const char* g_sStepTypeStr[]=
     "check"
 };
 
+struct TCode
+{
+   int   length;
+   char* content;
+   
+   TCode()
+   {
+      length = 0;
+      content = NULL;
+   }
+}
+
+struct TStepStatistics
+{
+   long long   total_count;
+   long long   success_count;
+   long long   failure_count;
+   long double total_duration;   //s.us
+   long double success_duration; //s.us
+   long double success_max;
+   long double success_min;
+   long double failure_duration; //s.us
+   long double failure_max;
+   long double failure_min;
+   
+   TStepStatistics()
+   {
+      total_count = 0;
+      success_count = 0;
+      failure_count = 0;
+      total_duration = 0.0;
+      success_duration = 0.0;
+      success_max = 0.0;
+      success_min = 0.0;
+      failure_duration = 0.0;
+      failure_max = 0.0;
+      failure_min = 0.0;
+   }
+};
+
 #define STEP_TYPE_STR(x) (x>=0 && x<sizeof(g_sStepTypeStr)/sizeof(g_sStepTypeStr[0]) ? g_sStepTypeStr[x] : "unknow")
 
 class TStep
 {
 public:
-    TStep()
-    {
-        m_next = NULL;
-        m_child = NULL;
-        m_parent = NULL;
-    }
-    ~TStep()
-    {
-        if(NULL != m_next)
-        {
-            delete m_next;
-            m_next = NULL;
-        }
-        if(NULL != m_child)
-        {
-            delete m_child;
-            m_child = NULL;
-        }
-    }
-    TStep* next() const
-    {
-        if(NULL != m_child)
-            return m_child;
-        else if(NULL != m_next)
-            return m_next;
-        else
-            return m_parent;
-    }
-    TStep* parent() const
-    {
-        return m_parent;
-    }
-    virtual TStepResult run(TMTPEvent* pEvent)=0;
+   bool run(int ti);
+   virtual bool   send(int ti);
+   virtual bool   recv(int ti);
+   //virtual void*  send(int ti);
+   //virtual void*  recv(int ti);
+   virtual bool   init(xmlNodePtr pNode);
+   //virtual TStepResult  run(TMTPEvent* pEvent)=0;
 private:
-    TStepType m_type;
-    TStep* m_next;
-    TStep* m_child;
-    TStep* m_parent;
+   TProtocolType     m_protocol;
+   TStepStatistics   m_st;
+   TStepType         m_type;
+   int               m_timer;
+   TStep*            m_next;
+   TStep*            m_child;
+   TStep*            m_parent;
 };
 
 #endif
