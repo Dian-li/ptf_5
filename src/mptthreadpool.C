@@ -73,6 +73,26 @@ void* TMptThreadPool::workerFunc(void * arg)
     return NULL;
 }
 
+void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
+{
+    TThreadData *me = (TThreadData*)arg;
+    char buf[1];
+    unsigned int timeout_fd;
+
+    if (read(fd, buf, 1) != 1)
+    {
+        return;
+    }
+
+    switch (buf[0])
+    {
+    //TODO
+    default:
+        break;
+    }
+    return;
+}
+
 int TMptThreadPool::setupThread(TThreadData * data)
 {
     data->m_base = event_base_new();
@@ -84,7 +104,7 @@ int TMptThreadPool::setupThread(TThreadData * data)
     event_set(&data->m_notifyEvent,
                 data->m_downwardFd,
                 EV_READ | EV_PERSIST,
-                NULL,//TODO
+                threadEventProcess,
                 data);
     event_base_set(data->m_base, &data->m_notifyEvent);
 
