@@ -13,6 +13,7 @@
 #include <string>
 using std::string;
 #include <stdint.h>
+#include <libxml/parser.h>
 
 class TStep;
 class TScript
@@ -23,6 +24,10 @@ public:
     bool init();
     TStep* enter();
     bool exit();
+
+private:
+    TStep* initProperty(xmlNodePtr pNode);
+
 private:
     string m_file;
     string m_lastModify;

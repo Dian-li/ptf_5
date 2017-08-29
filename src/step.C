@@ -9,7 +9,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include "step.h"
+#include "mptevent.h"
+
+const char* g_sStepTypeStr[]=
+{
+    "send",
+    "recv",
+    "check"
+};
 
 TStep::TStep()
 {
@@ -36,7 +45,7 @@ TStep::~TStep()
    }
 }
 
-TStep::TStep* next() const
+TStep* TStep::next() const
 {
    if(NULL != m_child)
    {
@@ -52,89 +61,39 @@ TStep::TStep* next() const
    }
 }
 
-TStep::TStep* parent() const
+TStep* TStep::parent() const
 {
    return m_parent;
 }
 
-bool TStep::run(int ti)
+TStepResult TStep::run(TMTPEvent * pEvent)
 {
-   /*long double       step_begin = 0.0;
+   long double       step_begin = 0.0;
    long double       step_duration = 0.0;
-   struct timeval    cur_t = 0;
-   struct timezone   cur_z = 0;
-   char              time_str[32] = {0};*/
-   bool              ret = false;
+   struct timeval    cur_t;
+   struct timezone   cur_z;
+   char              time_str[32] = {0};
+   TStepResult              ret = SRST_ERREND;
 
    gettimeofday(&cur_t,&cur_z);
    snprintf(time_str, sizeof(time_str), "%d.%d", cur_t.tv_sec, cur_t.tv_usec);
    step_begin = strtold(time_str, NULL); 
 
-   switch(m_protocol)
+   switch(m_type)
    {
-      case P_HTTP:
+      case ST_SEND:
       {
-         if(ST_SEND = m_type)
-         {
-            ret = (THTTPStep *)this->send(ti);
-         }
-         else
-         {
-            ret = (THTTPStep *)this->recv(ti);
-         }
+         ret = send(pEvent);
          break;
       }
-      case P_TCP:
+      case ST_RECV:
       {
-         if(ST_SEND = m_type)
-         {
-            ret = (TTCPStep *)this->send(ti);
-         }
-         else
-         {
-            ret = (TTCPStep *)this->recv(ti);
-         }
-         break;
-      }
-      case P_UDP:
-      {
-         if(ST_SEND = m_type)
-         {
-            ret = (TUDPStep *)this->send(ti);
-         }
-         else
-         {
-            ret = (TUDPStep *)this->recv(ti);
-         }
-         break;
-      }
-      case p_FTP:
-      {
-         if(ST_SEND = m_type)
-         {
-            ret = (TFTPStep *)this->send(ti);
-         }
-         else
-         {
-            ret = (TFTPStep *)this->recv(ti);
-         }
-         break;
-      }
-      case P_RMDB:
-      {
-         if(ST_SEND = m_type)
-         {
-            ret = (TRMDBStep *)this->send(ti);
-         }
-         else
-         {
-            ret = (TRMDBStep *)this->recv(ti);
-         }
+         ret = recv(pEvent);
          break;
       }
       default:
       {
-         ret = false;
+         break;
       }
    }
       
@@ -171,9 +130,4 @@ bool TStep::run(int ti)
       }
    }*/
    return ret;
-}
-
-bool TStep::init(xmlNodePtr pNode)
-{
-   return false;
 }

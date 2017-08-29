@@ -9,16 +9,23 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 #include "tcpstep.h"
 
 TTCPStep::TTCPStep()
 {
-   port = 0;
+   m_port = 0;
 }
 
 TTCPStep::~TTCPStep()
 {
-   port = 0;
+    if(NULL != m_data.content)
+    {
+        delete []m_data.content;
+        m_data.content = NULL;
+        m_data.length = 0;
+    }
 }
 
 bool TTCPStep::init(xmlNodePtr pNode)
@@ -52,7 +59,7 @@ bool TTCPStep::init(xmlNodePtr pNode)
    }
    else
    {
-      ip = pValue;
+      m_ip = (const char*)pValue;
    }
    
    pValue = xmlGetProp(pNode, (const xmlChar *)"port");
@@ -63,7 +70,7 @@ bool TTCPStep::init(xmlNodePtr pNode)
    }
    else
    {
-      port = atoi(pValue);
+      m_port = atoi((const char*)pValue);
    }
    
    pValue = xmlGetProp(pNode, (const xmlChar *)"CDATA");
@@ -72,37 +79,37 @@ bool TTCPStep::init(xmlNodePtr pNode)
       printf("TTCPStep init() get CDATA failed !");
       return false;
    }
-   length = strlen(pValue);
-   data.length = 0;
-   data.content = new char[length];
+   length = strlen((const char*)pValue);
+   m_data.length = 0;
+   m_data.content = new char[length];
    for(i = 0; i < length; i++)
    {
       if('\\' == pValue[i] && ('x' == pValue[i + 1] || 'X' == pValue[i + 1]))
       {
-         data.content[data.length++] = (unsigned char)pValue[i + 2] * 16 + (unsigned char)pValue[i + 3];
+         m_data.content[m_data.length++] = (unsigned char)pValue[i + 2] * 16 + (unsigned char)pValue[i + 3];
          i += 3;
       }
       else
       {
-         data.content[data.length++] = pValue[i];
+         m_data.content[m_data.length++] = pValue[i];
       }
    }
 }
 
 
-bool TTCPStep::send(int ti)
+TStepResult TTCPStep::send(TMTPEvent * pEvent)
 {
    if(ST_RECV == m_type)
    {
-      return false;
+      return SRST_ERREND;
    }
 }
 
-bool TTCPStep::recv(int ti)
+TStepResult TTCPStep::recv(TMTPEvent * pEvent)
 {
    if(ST_SEND == m_type)
    {
-      return false;
+      return SRST_ERREND;
    }
    
 }

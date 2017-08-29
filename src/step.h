@@ -5,11 +5,13 @@
 * @author    chenggang
 * @History
 *    1.0.0: chenggang,  2017/06/19,  Initial version
+*    1.0.1: wangqihua,  2017/08/10,  add TStepStatistics
 */
 
 #ifndef _STEP_H
 #define _STEP_H
 
+#include <libxml/parser.h>
 #include "st.h"
 
 enum TStepType
@@ -29,20 +31,15 @@ enum TStepResult
 
 enum TProtocolType
 {
-   P_UNKNOW = 0;
-   P_HTTP = 1;
-   P_TCP = 2;
-   P_UDP = 3;
-   P_FTP = 4;
+   P_UNKNOW = 0,
+   P_HTTP = 1,
+   P_TCP = 2,
+   P_UDP = 3,
+   P_FTP = 4,
    P_RMDB = 5
 };
 
-const char* g_sStepTypeStr[]=
-{
-    "send",
-    "recv",
-    "check"
-};
+extern const char* g_sStepTypeStr[];
 
 struct TCode
 {
@@ -54,7 +51,7 @@ struct TCode
       length = 0;
       content = NULL;
    }
-}
+};
 
 struct TStepStatistics
 {
@@ -86,17 +83,20 @@ struct TStepStatistics
 
 #define STEP_TYPE_STR(x) (x>=0 && x<sizeof(g_sStepTypeStr)/sizeof(g_sStepTypeStr[0]) ? g_sStepTypeStr[x] : "unknow")
 
+class TMTPEvent;
 class TStep
 {
+friend class TScript;
 public:
-   bool run(int ti);
-   virtual bool   send(int ti);
-   virtual bool   recv(int ti);
-   //virtual void*  send(int ti);
-   //virtual void*  recv(int ti);
-   virtual bool   init(xmlNodePtr pNode);
-   //virtual TStepResult  run(TMTPEvent* pEvent)=0;
-private:
+   TStep();
+   virtual ~TStep();
+   TStep* next() const;
+   TStep* parent() const;
+   virtual TStepResult send(TMTPEvent* pEvent){return SRST_ERREND;}
+   virtual TStepResult recv(TMTPEvent* pEvent){return SRST_ERREND;}
+   virtual bool init(xmlNodePtr pNode)=0;
+   TStepResult  run(TMTPEvent* pEvent);
+protected:
    TProtocolType     m_protocol;
    TStepStatistics   m_st;
    TStepType         m_type;

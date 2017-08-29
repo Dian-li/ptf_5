@@ -15,13 +15,15 @@
 class TTCPStep : public TStep
 {
 public:
+   TTCPStep();
+   ~TTCPStep();
    bool init(xmlNodePtr pNode);
-   bool send(int ti);
-   bool recv(int ti);
+   TStepResult send(TMTPEvent* pEvent);
+   TStepResult recv(TMTPEvent* pEvent);
 private:
-   int      port;
-   string   ip;
-   TCode    data;
-}
+   int      m_port;
+   string   m_ip;
+   TCode    m_data;
+};
 
 #endif

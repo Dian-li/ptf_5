@@ -10,7 +10,8 @@
 #ifndef  _ST_H
 #define  _ST_H
 
-#include <strings.h>
+#include <string>
+using std::string;
 
 struct TCPUST
 {

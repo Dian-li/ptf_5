@@ -9,5 +9,11 @@
 #define unlikely(x) __builtin_expect(!!(x), 0)
 #endif
 
+#define PROTOCOL_HTTP  "HTTP"
+#define PROTOCOL_FTP   "FTP"
+#define PROTOCOL_RMDB  "RMDB"
+#define PROTOCOL_TCP   "TCP"
+#define PROTOCOL_UDP   "UDP"
+
 #endif
 

@@ -9,13 +9,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xpath.h>  
 #include <libxml/xpathInternals.h>  
 #include <libxml/xmlmemory.h>  
 #include <libxml/xpointer.h> 
 #include "script.h"
+#include "step.h"
+#include "mptconst.h"
 
 TScript::TScript(const char * file)
 {
@@ -36,7 +37,7 @@ bool TScript::init()
    
    TStep*      pStep = NULL;
 
-   pDoc = xmlReadFile (m_file, "UTF-8", XML_PARSE_RECOVER);
+   pDoc = xmlReadFile (m_file.c_str(), "UTF-8", XML_PARSE_RECOVER);
    if (NULL == pDoc)
    {
       printf("ERROR: TScript can't open file[%s]!\n", m_file.c_str());
@@ -57,10 +58,11 @@ bool TScript::init()
    }
 
    pNode = pRoot->xmlChildrenNode;
+   TStep* pLast = NULL;
    while(pNode)
    {
-      pStep = initStep(pNode, pStep);
-      if(NULL = pStep)
+      pStep = initProperty(pNode);
+      if(NULL == pStep)
       {
          break;
       }
@@ -71,7 +73,7 @@ bool TScript::init()
       }
       if(pLast)
       {
-         pLast->next = pStep;
+         pLast->m_next = pStep;
       }
       pNode = pNode->next;
       pLast = pStep;
@@ -79,12 +81,9 @@ bool TScript::init()
 
    if(pNode)   //step init failed, delete all step.
    {
-      pStep = m_script;
-      while(pStep)
+      if(NULL != m_script)
       {
-         pLast = pStep->next;
-         delete pStep;
-         pStep = pLast;
+        delete m_script;
       }
       xmlFreeDoc(pDoc);
       return false;
@@ -109,36 +108,33 @@ TStep* TScript::initProperty(xmlNodePtr pNode)
    bool     ret = false;
    
    pValue = xmlGetProp(pNode, (const xmlChar *)"protocol");
-   if(strncasecmp("HTTP", pValue) == 0)
+   /*if(strcasecmp(PROTOCOL_HTTP, (const char*)pValue) == 0)
    {
       pStep = new THTTPStep();
-      ret = (THTTPStep *)pStep->init(pNode);
    }
-   else if(strncasecmp("TCP", pValue) == 0)
+   else if(strcasecmp(PROTOCOL_TCP, (const char*)pValue) == 0)
    {
       pStep = new TTCPStep();
-      ret = (TTCPStep *)pStep->init(pNode);
    }
-   else if(strncasecmp("UDP", pValue) == 0)
+   else if(strcasecmp(PROTOCOL_UDP, (const char*)pValue) == 0)
    {
       pStep = new TUDPStep();
-      ret = (TUDPStep *)pStep->init(pNode);
    }
-   else if(strncasecmp("FTP", pValue) == 0)
+   else if(strcasecmp(PROTOCOL_FTP, (const char*)pValue) == 0)
    {
       pStep = new TFTPStep();
-      ret = (TFTPStep *)pStep->init(pNode);
    }
-   else if(strncasecmp("RMDB", pValue) == 0)
+   else if(strcasecmp(PROTOCOL_RMDB, (const char*)pValue) == 0)
    {
       pStep = new TRMDBStep();
-      ret = (TRMDBStep *)pStep->init(pNode);
    }
    else
    {
       printf("TScript initProperty() find unknow protocol type(%s)", pValue);
       return NULL;
    }
+   ret = pStep->init(pNode);
+   */
    
    if(false == ret)
    {
@@ -154,15 +150,7 @@ TStep* TScript::enter()
 
 bool TScript::exit()
 {
-   TStep*      pStep = NULL;
-   
-   while(NULL == m_scripst)
-   {
-      pStep = m_scripst->next;
-      delete m_scripst;
-      m_scripst = pStep;
-   }
-   m_scripst = NULL;
+    return false;
 }
 
 

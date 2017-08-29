@@ -35,6 +35,7 @@ public:
 
 private:
     static void* workerFunc(void* arg);
+    static void threadEventProcess(int fd, short which, void *arg);
     int setupThread(TThreadData* data);
     int createThread(void *(*func)(void *), TThreadData *arg);
 
