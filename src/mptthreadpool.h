@@ -13,8 +13,10 @@
 #include <pthread.h>
 #include <event.h>
 
-#include "ringbuff.h"
-#include "mptevent.h"
+//#include "ringbuff.h"
+//#include "mptevent.h"
+
+#define THR_EVENT 'E'
 
 struct TThreadData
 {

@@ -86,6 +86,10 @@ void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
 
     switch (buf[0])
     {
+    case THR_EVENT:
+        {
+            TMTPEvent* pEvent = me->m_queue.dequeue();
+        }
     //TODO
     default:
         break;

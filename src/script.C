@@ -146,11 +146,29 @@ TStep* TScript::initProperty(xmlNodePtr pNode)
 
 TStep* TScript::enter()
 {
+    uint64_t old;
+    do
+    {
+        old = m_nUsing;
+    }
+    while(!CAS(&m_nUsing, old, old+1));
+    return m_script;
 }
 
 bool TScript::exit()
 {
-    return false;
+    uint64_t old;
+    do
+    {
+        old = m_nUsing;
+    }
+    while(!CAS(&m_nUsing, old, old-1));
+    do
+    {
+        old = m_nUsed;
+    }
+    while(!CAS(&m_nUsed, old, old+1));
+    return true;
 }
 
 
