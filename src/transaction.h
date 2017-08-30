@@ -19,13 +19,13 @@ struct event_base;
 class TTransation
 {
 public:
-    TTransation(TScript* pScript);
+    TTransation(TScript* pScript, struct event_base* base);
     ~TTransation();
-    bool pushEvent(TMPTEvent* pEvent);
+    //bool pushEvent(TMPTEvent* pEvent);
     int onEvent();
 private:
-    TRingbuffer<TMPTEvent> *m_pMsgQueue;
-    TMPTEvent* m_pCurEvent;
+    //TRingbuffer<TMPTEvent> *m_pMsgQueue;
+    //TMPTEvent* m_pCurEvent;
     struct event_base *m_base;
     TScript* m_pScript;
     TStep*   m_curStep;

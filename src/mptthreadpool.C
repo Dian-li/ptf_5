@@ -13,6 +13,27 @@
 
 #include "mptconst.h"
 #include "mptthreadpool.h"
+#include "transaction.h"
+
+TThreadData::TThreadData()
+{
+    m_queue = new TRingbuffer<TMPTEvent>(256);
+    assert(NULL != m_queue);
+}
+
+TThreadData::~TThreadData()
+{
+    if(likely(NULL != m_base))
+    {
+        event_base_free(m_base);
+        m_base = NULL;
+    }
+    if(likely(NULL != m_queue))
+    {
+        delete m_queue;
+        m_queue = NULL;
+    }
+}
 
 TMptThreadPool::TMptThreadPool()
 {
@@ -38,7 +59,7 @@ int TMptThreadPool::init(int nThread)
         return -1;
     }
     m_nCount = nThread;
-    m_threads = (TThreadData*)calloc(nThread, sizeof(TThreadData));
+    m_threads = new TThreadData[nThread];
     if(unlikely(NULL == m_threads))
     {
         perror("Can't allocate thread descriptors");
@@ -52,10 +73,8 @@ int TMptThreadPool::init(int nThread)
             perror("Can't create pipes");
             return -3;
         }
-
         m_threads[i].m_readCmdEventFd = fds[0];
         m_threads[i].m_writeCmdEventFd = fds[1];
-
         setupThread(&m_threads[i]);
     }
     for (int i = 0; i < m_nCount; ++i)
@@ -74,7 +93,7 @@ bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
     char buf[1] = {THR_EVENT};
     if(likely(id >= 0 && id < m_nCount))
     {
-        ret = m_threads[id].m_queue.enqueue(pCmd);
+        ret = m_threads[id].m_queue->enqueue(pCmd);
         if(likely(ret))
         {
             if(likely(write(m_threads[id].m_readCmdEventFd, buf, 1) == 1))
@@ -91,7 +110,7 @@ bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
     {
         for(id=0; id < m_nCount; ++id)
         {
-            ret = m_threads[id].m_queue.enqueue(pCmd);
+            ret = m_threads[id].m_queue->enqueue(pCmd);
             if(likely(ret))
             {
                 if(likely(write(m_threads[id].m_readCmdEventFd, buf, 1) == 1))
@@ -130,17 +149,46 @@ void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
     {
     case THR_EVENT:
         {
-            TMPTEvent* pEvent = me->m_queue.dequeue();
+            TMPTEvent* pEvent = me->m_queue->dequeue();
             TEventType type = pEvent->type();
             switch(type)
             {
             case ET_CMD_START:
-                
+                startTask(dynamic_cast<TCmdStartEvent*>(pEvent), me);
+                break;
+            case ET_CMD_STOP:
+                stopTask(dynamic_cast<TCmdStopEvent*>(pEvent), me);
+                break;
+            default:;
+            }
+            //start cmd will save to thread data, delete it while stop task
+            if(ET_CMD_START != type)
+            {
+                delete pEvent;
+                pEvent = NULL;
             }
         }
     //TODO
     default:
         break;
+    }
+    return;
+}
+
+void TMptThreadPool::time_cb(evutil_socket_t fd, short event, void *arg)
+{
+    TThreadData* pThrData = (TThreadData*)arg;
+    bool ret = runTask(pThrData);
+    if(likely(ret))
+    {
+        struct timeval tv;
+        tv.tv_sec = 1;
+    	tv.tv_usec = 0;
+    	evtimer_add(&pThrData->m_timerEvent, &tv);
+    }
+    else
+    {
+        evtimer_del(&pThrData->m_timerEvent);
     }
     return;
 }
@@ -159,6 +207,8 @@ int TMptThreadPool::setupThread(TThreadData * data)
                 threadEventProcess,
                 data);
     event_base_set(data->m_base, &data->m_notifyEvent);
+    event_base_set(data->m_base, &data->m_timerEvent);
+    evtimer_set(&data->m_timerEvent, TMptThreadPool::time_cb, data);
 
     if (unlikely(event_add(&data->m_notifyEvent, 0) == -1))
     {
@@ -178,6 +228,72 @@ int TMptThreadPool::createThread(void *(*func)(void *), TThreadData *arg)
     if (unlikely((ret = pthread_create(&((TThreadData*)arg)->m_threadID, &attr, func, arg)) != 0))
     {
         fprintf(stderr, "Can't create thread: %s\n", strerror(ret));
+    }
+    return ret;
+}
+
+bool TMptThreadPool::startTask(TCmdStartEvent * pCmd, TThreadData* pThrData)
+{
+    pThrData->m_taskInfo.m_script = pCmd->getScript();
+    pThrData->m_taskInfo.m_tps = pCmd->getTps();
+    pThrData->m_taskInfo.m_total = pCmd->getTotal();
+    pThrData->m_taskInfo.m_duration = pCmd->getDuration();
+    pThrData->m_taskInfo.m_nCount = 0;
+    pThrData->m_taskInfo.m_nSecs = 0;
+    bool ret = runTask(pThrData);
+    if(likely(ret))
+    {
+        struct timeval tv;
+        tv.tv_sec = 1;
+    	tv.tv_usec = 0;
+    	evtimer_add(&pThrData->m_timerEvent, &tv);
+    }
+    return ret;
+}
+
+bool TMptThreadPool::stopTask(TCmdStopEvent * pCmd, TThreadData* pThrData)
+{
+    TTaskInfo& ti = pThrData->m_taskInfo;
+    bool ret = false;
+    if(ti.m_script == pCmd->getScript())
+    {
+        ti.m_stopFlag = true;
+        ret = true;
+    }
+    return ret;
+}
+
+bool TMptThreadPool::runTask(TThreadData * pThrData)
+{
+    TTaskInfo& ti = pThrData->m_taskInfo;
+    int nNewTask = ti.m_tps;
+    bool ret = true;
+    if(ti.m_total > 0)
+    {
+        nNewTask = (ti.m_nCount + nNewTask > ti.m_total ? ti.m_total - ti.m_nCount : nNewTask);
+        if(unlikely(nNewTask <= 0))
+        {
+            ret = false;
+        }
+    }
+    else if(ti.m_duration > 0)
+    {
+        if(unlikely(ti.m_nSecs + 1 > ti.m_duration))
+        {
+            ret = false;
+        }
+    }
+    if(likely(ret))
+    {
+        ti.m_nCount += nNewTask;
+        ++ti.m_duration;
+        //TODO
+        for(int i=0; i<nNewTask; ++i)
+        {
+            TTransation* pTrans = new TTransation(ti.m_script, pThrData->m_base);
+            if(unlikely(NULL == pTrans)) break;
+            pTrans->onEvent();
+        }
     }
     return ret;
 }

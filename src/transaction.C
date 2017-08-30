@@ -15,36 +15,39 @@
 #include "step.h"
 #include "mptconst.h"
 
-TTransation::TTransation(TScript * pScript)
+TTransation::TTransation(TScript* pScript, struct event_base* base)
 {
     assert(NULL != pScript);
-    m_pMsgQueue = new TRingbuffer<TMPTEvent>(256);
-    assert(NULL != m_pMsgQueue);
+    //m_pMsgQueue = new TRingbuffer<TMPTEvent>(256);
+    //assert(NULL != m_pMsgQueue);
+    m_base = base;
     m_pScript = pScript;
     m_curStep = m_pScript->enter();
 }
 
 TTransation::~TTransation()
 {
-    if(likely(NULL != m_pMsgQueue))
-    {
-        delete m_pMsgQueue;
-        m_pMsgQueue = NULL;
-    }
+    //if(likely(NULL != m_pMsgQueue))
+    //{
+    //    delete m_pMsgQueue;
+    //    m_pMsgQueue = NULL;
+    //}
 }
 
-bool TTransation::pushEvent(TMPTEvent * pEvent)
+/*bool TTransation::pushEvent(TMPTEvent * pEvent)
 {
     if(unlikely(NULL == pEvent)) return false;
     bool ret = m_pMsgQueue->enqueue(pEvent);
     return ret;
 }
+*/
 
 int TTransation::onEvent()
 {
-    TMPTEvent* pEvent = m_pMsgQueue->dequeue();
+    TMPTEvent* pEvent = NULL;
+    //m_pMsgQueue->dequeue();
     TStepResult ret = SRST_SUCC;
-    if(unlikely(NULL == pEvent)) return ret;
+    //if(unlikely(NULL == pEvent)) return ret;
     do
     {
         ret = m_curStep->run(pEvent);

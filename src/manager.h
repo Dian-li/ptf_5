@@ -12,6 +12,8 @@
 
 #include <event2/event.h>
 #include <event2/http.h>
+#include <vector>
+using std::vector;
 
 #include "mptthreadpool.h"
 

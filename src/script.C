@@ -17,10 +17,13 @@
 #include "script.h"
 #include "step.h"
 #include "mptconst.h"
+#include "atomic.h"
 
 TScript::TScript(const char * file)
 {
-   m_file = file;
+   m_file = getenv("PTF_HOME");
+   m_file += "/task/";
+   m_file += file;
    m_script = NULL;
 }
 
@@ -36,7 +39,6 @@ bool TScript::init()
    xmlNodePtr  pNode = NULL;
    
    TStep*      pStep = NULL;
-
    pDoc = xmlReadFile (m_file.c_str(), "UTF-8", XML_PARSE_RECOVER);
    if (NULL == pDoc)
    {

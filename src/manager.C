@@ -60,7 +60,7 @@ int TManager::startHttpServer()
     }
     evhttp_set_timeout(m_httpd, 120);
     evhttp_set_gencb(m_httpd, httpd_cb, this);
-    evhttp_set_cb(m_httpd, "/ptf", httpd_ptf_cb, this);
+    //evhttp_set_cb(m_httpd, "/ptf", httpd_ptf_cb, this);
     
     return 0;
 }
@@ -77,9 +77,27 @@ void TManager::processHttpReq(struct evhttp_request *req)
     const char *decode_uri =  evhttp_request_get_uri(req) ;
     char *url = evhttp_decode_uri(decode_uri);
     evbuffer *buff = evbuffer_new();
-    evbuffer_add(buff, "It works!", 9);
-    printf( "[%s][%s]\n" , str , decode_uri);
-    evhttp_send_reply( req, HTTP_OK, "OK", buff);
+    if(0==strcmp("/", url))
+    {
+        evbuffer_add(buff, "It works!", 9);
+        printf( "[%s][%s]-->[%s]\n" , str , decode_uri, url);
+        evhttp_send_reply( req, HTTP_OK, "OK", buff);
+    }
+    else if(0 == strncmp("/ptf", url, 4))
+    {
+        const char *p = NULL, *q = NULL;
+        int nLen = strlen(url);
+        p = url + 4 + 1;
+        if(p < url + nLen)
+        {
+            q = strchar(p, '/');
+            if(NULL != q)
+            {
+                *q = 0;
+            }
+            TScript* pScript = new TScript(p);
+        }
+    }
 
     evbuffer_free(buff);
     if(likely( NULL != url  ))

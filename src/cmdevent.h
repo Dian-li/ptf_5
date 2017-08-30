@@ -11,6 +11,7 @@
 #define _CMDEVENT_H
 
 #include "mptevent.h"
+#include "script.h"
 
 class TCmdStartEvent : public TMPTEvent
 {
@@ -25,10 +26,10 @@ public:
         m_duration = duration;
     }
     ~TCmdStartEvent(){}
-    const TScript* getScript() const {return m_script;}
-    const TScript* getTps() const {return m_tps;}
-    const TScript* getTotal() const {return m_total;}
-    const TScript* getDuration() const {return m_duration;}
+    TScript* getScript() const {return m_script;}
+    int getTps() const {return m_tps;}
+    int getTotal() const {return m_total;}
+    int getDuration() const {return m_duration;}
 private:
     TScript* m_script;
     int m_tps;
@@ -46,6 +47,7 @@ public:
         m_script = script;
     }
     ~TCmdStopEvent(){}
+    TScript* getScript() const {return m_script;}
 private:
     TScript* m_script;
 };
