@@ -9,6 +9,7 @@
 
 #include <event2/buffer.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "manager.h"
 #include "ptfconfig.h"
@@ -85,17 +86,54 @@ void TManager::processHttpReq(struct evhttp_request *req)
     }
     else if(0 == strncmp("/ptf", url, 4))
     {
-        const char *p = NULL, *q = NULL;
+        char *p = NULL, *q = NULL;
         int nLen = strlen(url);
         p = url + 4 + 1;
         if(p < url + nLen)
         {
-            q = strchar(p, '/');
+            q = strchr(p, '/');
             if(NULL != q)
             {
                 *q = 0;
             }
             TScript* pScript = new TScript(p);
+            if(NULL != q) *q = '/';
+            bool ret = false;
+            if(likely(NULL != pScript))
+            {
+                ret = pScript->init();
+            }
+            if(likely(ret))
+            {
+                vector < int > workers;
+                int nId = chooseWorkers(workers);
+                if(unlikely(nId < 0))
+                {
+                    evhttp_send_reply( req, HTTP_INTERNAL, "Internal Error", NULL);
+                }
+                else 
+                {
+                    TCmdStartEvent cmd(pScript, 2, 25, 0); 
+                    if(0 == nId)
+                    {
+                        m_threadPool.order(&cmd, -1);
+                    }
+                    else
+                    {
+                        for(vector<int>::iterator iter = workers.begin(); iter != workers.end(); ++iter)
+                        {
+                            m_threadPool.order(&cmd, *iter);
+                        }
+                    }
+                    evbuffer_add(buff, "start task successfully!", 24);
+                    evhttp_send_reply( req, HTTP_OK, "OK", buff);
+                }
+            }
+            else
+            {
+                evbuffer_add(buff, "load task failed!", 17);
+                evhttp_send_reply( req, HTTP_INTERNAL, "Internal Error", NULL);
+            }
         }
     }
 
@@ -104,6 +142,7 @@ void TManager::processHttpReq(struct evhttp_request *req)
     {
        free(url);
     }
+    return;
 }
 
 int TManager::chooseWorkers(vector < int > & workers)

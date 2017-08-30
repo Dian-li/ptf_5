@@ -23,7 +23,6 @@ public:
 private:
    int      m_port;
    string   m_ip;
-   TCode    m_data;
 };
 
 #endif

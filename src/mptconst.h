@@ -14,6 +14,7 @@
 #define PROTOCOL_RMDB  "RMDB"
 #define PROTOCOL_TCP   "TCP"
 #define PROTOCOL_UDP   "UDP"
+#define PROTOCOL_STDOUT "STDOUT"
 
 #endif
 

@@ -13,13 +13,10 @@
 class TStdoutStep : public TStep
 {
 public:
-   TStdoutStep();
-   ~TStdoutStep();
-   bool init(xmlNodePtr pNode);
+   TStdoutStep(){}
+   ~TStdoutStep(){}
    TStepResult send(TMPTEvent* pEvent);
    TStepResult recv(TMPTEvent* pEvent);
-private:
-   TCode    m_data;
 };
 
 #endif

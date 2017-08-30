@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<root>
+    <send protocol="stdout">
+        <![CDATA[test stdout script.]]>
+    </send>
+</root>

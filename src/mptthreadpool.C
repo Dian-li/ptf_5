@@ -96,7 +96,7 @@ bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
         ret = m_threads[id].m_queue->enqueue(pCmd);
         if(likely(ret))
         {
-            if(likely(write(m_threads[id].m_readCmdEventFd, buf, 1) == 1))
+            if(likely(write(m_threads[id].m_writeCmdEventFd, buf, 1) == 1))
             {
                 ret = true;
             }
@@ -113,7 +113,7 @@ bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
             ret = m_threads[id].m_queue->enqueue(pCmd);
             if(likely(ret))
             {
-                if(likely(write(m_threads[id].m_readCmdEventFd, buf, 1) == 1))
+                if(likely(write(m_threads[id].m_writeCmdEventFd, buf, 1) == 1))
                 {
                     ret = true;
                 }
@@ -161,12 +161,8 @@ void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
                 break;
             default:;
             }
-            //start cmd will save to thread data, delete it while stop task
-            if(ET_CMD_START != type)
-            {
-                delete pEvent;
-                pEvent = NULL;
-            }
+            //delete pEvent; //TODO coredump
+            pEvent = NULL;
         }
     //TODO
     default:

@@ -13,17 +13,21 @@
 #include <libxml/xpath.h>  
 #include <libxml/xpathInternals.h>  
 #include <libxml/xmlmemory.h>  
-#include <libxml/xpointer.h> 
+#include <libxml/xpointer.h>
+#include <strings.h>
+
 #include "script.h"
 #include "step.h"
 #include "mptconst.h"
 #include "atomic.h"
+#include "stdoutstep.h"
 
 TScript::TScript(const char * file)
 {
    m_file = getenv("PTF_HOME");
    m_file += "/task/";
    m_file += file;
+   m_file += ".xml";
    m_script = NULL;
 }
 
@@ -39,7 +43,7 @@ bool TScript::init()
    xmlNodePtr  pNode = NULL;
    
    TStep*      pStep = NULL;
-   pDoc = xmlReadFile (m_file.c_str(), "UTF-8", XML_PARSE_RECOVER);
+   pDoc = xmlReadFile (m_file.c_str(), NULL, XML_PARSE_RECOVER);
    if (NULL == pDoc)
    {
       printf("ERROR: TScript can't open file[%s]!\n", m_file.c_str());
@@ -63,6 +67,14 @@ bool TScript::init()
    TStep* pLast = NULL;
    while(pNode)
    {
+      if (unlikely(XML_TEXT_NODE == pNode->type))
+      {
+         pNode = pNode->next;
+      }
+      if(unlikely(NULL == pNode))
+      {
+         break;
+      }
       pStep = initProperty(pNode);
       if(NULL == pStep)
       {
@@ -129,6 +141,10 @@ TStep* TScript::initProperty(xmlNodePtr pNode)
    else if(strcasecmp(PROTOCOL_RMDB, (const char*)pValue) == 0)
    {
       pStep = new TRMDBStep();
+   }*/
+   if(strcasecmp(PROTOCOL_STDOUT, (const char*)pValue) == 0)
+   {
+      pStep = new TStdoutStep();
    }
    else
    {
@@ -136,14 +152,14 @@ TStep* TScript::initProperty(xmlNodePtr pNode)
       return NULL;
    }
    ret = pStep->init(pNode);
-   */
+   
    
    if(false == ret)
    {
       delete pStep;
       pStep = NULL;
-      return NULL;
    }
+   return pStep;
 }
 
 TStep* TScript::enter()

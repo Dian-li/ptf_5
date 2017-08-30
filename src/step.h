@@ -94,7 +94,7 @@ public:
    TStep* parent() const;
    virtual TStepResult send(TMPTEvent* pEvent){return SRST_ERREND;}
    virtual TStepResult recv(TMPTEvent* pEvent){return SRST_ERREND;}
-   virtual bool init(xmlNodePtr pNode)=0;
+   virtual bool init(xmlNodePtr pNode);
    TStepResult  run(TMPTEvent* pEvent);
 protected:
    TProtocolType     m_protocol;
@@ -104,6 +104,7 @@ protected:
    TStep*            m_next;
    TStep*            m_child;
    TStep*            m_parent;
+   TCode    m_data;
 };
 
 #endif
