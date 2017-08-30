@@ -11,13 +11,13 @@
 #define _STEPSEND_H
 
 class TStep;
-class TMTPEvent;
+class TMPTEvent;
 class TStepSend : public TStep
 {
 public:
     TStepSend();
     ~TStepSend();
-    int run(TMTPEvent* pEvent);
+    int run(TMPTEvent* pEvent);
 private:
     const char* m_ip;
     unsigned short m_port;

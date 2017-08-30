@@ -18,7 +18,7 @@
 TTransation::TTransation(TScript * pScript)
 {
     assert(NULL != pScript);
-    m_pMsgQueue = new TRingbuffer<TMTPEvent>(256);
+    m_pMsgQueue = new TRingbuffer<TMPTEvent>(256);
     assert(NULL != m_pMsgQueue);
     m_pScript = pScript;
     m_curStep = m_pScript->enter();
@@ -33,7 +33,7 @@ TTransation::~TTransation()
     }
 }
 
-bool TTransation::pushEvent(TMTPEvent * pEvent)
+bool TTransation::pushEvent(TMPTEvent * pEvent)
 {
     if(unlikely(NULL == pEvent)) return false;
     bool ret = m_pMsgQueue->enqueue(pEvent);
@@ -42,7 +42,7 @@ bool TTransation::pushEvent(TMTPEvent * pEvent)
 
 int TTransation::onEvent()
 {
-    TMTPEvent* pEvent = m_pMsgQueue->dequeue();
+    TMPTEvent* pEvent = m_pMsgQueue->dequeue();
     TStepResult ret = SRST_SUCC;
     if(unlikely(NULL == pEvent)) return ret;
     do

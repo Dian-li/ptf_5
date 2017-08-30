@@ -88,6 +88,12 @@ void TManager::processHttpReq(struct evhttp_request *req)
     }
 }
 
+int TManager::chooseWorkers(vector < int > & workers)
+{
+    //TODO
+    return 0;
+}
+
 void httpd_cb(struct evhttp_request *req, void *arg)
 {
     ((TManager*)arg)->processHttpReq(req);
@@ -98,7 +104,7 @@ void httpd_ptf_cb(struct evhttp_request *req, void *arg)
     const char * str = evhttp_request_get_host(req);
     const char *decode_uri =  evhttp_request_get_uri(req) ;
     evbuffer *buff = evbuffer_new();
-    evbuffer_add(buff, "Welcome to mpt!", 9);
+    evbuffer_add(buff, "Welcome to mpt!", 15);
     printf( "[%s][%s]\n" , str , decode_uri);
     evhttp_send_reply( req, HTTP_OK, "OK", buff);
     evbuffer_free(buff);

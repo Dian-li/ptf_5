@@ -25,7 +25,13 @@ public:
     void processHttpReq(struct evhttp_request *req);
 
 private:
-    int startHttpServer();;
+    int startHttpServer();
+    /**
+    * @brief choose worker thread to run task
+    * @param workers output worker thread index
+    * @return <0 indicates error, 0 indicates all workers, >0 worker count, index save in workers vector
+    */
+    int chooseWorkers(vector<int>& workers);
 
 private:
     struct event_base *m_base;

@@ -53,8 +53,8 @@ int TMptThreadPool::init(int nThread)
             return -3;
         }
 
-        m_threads[i].m_downwardFd = fds[0];
-        m_threads[i].m_upwardFd = fds[1];
+        m_threads[i].m_readCmdEventFd = fds[0];
+        m_threads[i].m_writeCmdEventFd = fds[1];
 
         setupThread(&m_threads[i]);
     }
@@ -62,6 +62,48 @@ int TMptThreadPool::init(int nThread)
     {
         ret = createThread(workerFunc, &m_threads[i]);
         if(unlikely(ret)) return ret;
+    }
+    return ret;
+}
+
+bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
+{
+    bool ret = false;
+    if(unlikely(NULL == pCmd)) return ret;
+    TEventType cmdType = pCmd->type();
+    char buf[1] = {THR_EVENT};
+    if(likely(id >= 0 && id < m_nCount))
+    {
+        ret = m_threads[id].m_queue.enqueue(pCmd);
+        if(likely(ret))
+        {
+            if(likely(write(m_threads[id].m_readCmdEventFd, buf, 1) == 1))
+            {
+                ret = true;
+            }
+            else
+            {
+                perror("Fatal error, notify to worker failed.");
+            }
+        }
+    }
+    else
+    {
+        for(id=0; id < m_nCount; ++id)
+        {
+            ret = m_threads[id].m_queue.enqueue(pCmd);
+            if(likely(ret))
+            {
+                if(likely(write(m_threads[id].m_readCmdEventFd, buf, 1) == 1))
+                {
+                    ret = true;
+                }
+                else
+                {
+                    perror("Fatal error, notify to worker failed.");
+                }
+            }
+        }
     }
     return ret;
 }
@@ -88,7 +130,13 @@ void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
     {
     case THR_EVENT:
         {
-            TMTPEvent* pEvent = me->m_queue.dequeue();
+            TMPTEvent* pEvent = me->m_queue.dequeue();
+            TEventType type = pEvent->type();
+            switch(type)
+            {
+            case ET_CMD_START:
+                
+            }
         }
     //TODO
     default:
@@ -106,7 +154,7 @@ int TMptThreadPool::setupThread(TThreadData * data)
         return -2;
     }
     event_set(&data->m_notifyEvent,
-                data->m_downwardFd,
+                data->m_readCmdEventFd,
                 EV_READ | EV_PERSIST,
                 threadEventProcess,
                 data);

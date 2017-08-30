@@ -66,7 +66,7 @@ TStep* TStep::parent() const
    return m_parent;
 }
 
-TStepResult TStep::run(TMTPEvent * pEvent)
+TStepResult TStep::run(TMPTEvent * pEvent)
 {
    long double       step_begin = 0.0;
    long double       step_duration = 0.0;

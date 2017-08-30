@@ -14,7 +14,7 @@
 
 struct evhttp_request;
 enum evhttp_cmd_type;
-class THttpEvent : public TMTPEvent
+class THttpEvent : public TMPTEvent
 {
 public:
     THttpEvent(TEventDirection direct, struct evhttp_request* pMsg);

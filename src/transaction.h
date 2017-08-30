@@ -12,7 +12,7 @@
 
 #include "ringbuff.h"
 
-class TMTPEvent;
+class TMPTEvent;
 class TScript;
 class TStep;
 struct event_base;
@@ -21,11 +21,11 @@ class TTransation
 public:
     TTransation(TScript* pScript);
     ~TTransation();
-    bool pushEvent(TMTPEvent* pEvent);
+    bool pushEvent(TMPTEvent* pEvent);
     int onEvent();
 private:
-    TRingbuffer<TMTPEvent> *m_pMsgQueue;
-    TMTPEvent* m_pCurEvent;
+    TRingbuffer<TMPTEvent> *m_pMsgQueue;
+    TMPTEvent* m_pCurEvent;
     struct event_base *m_base;
     TScript* m_pScript;
     TStep*   m_curStep;

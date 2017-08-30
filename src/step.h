@@ -83,7 +83,7 @@ struct TStepStatistics
 
 #define STEP_TYPE_STR(x) (x>=0 && x<sizeof(g_sStepTypeStr)/sizeof(g_sStepTypeStr[0]) ? g_sStepTypeStr[x] : "unknow")
 
-class TMTPEvent;
+class TMPTEvent;
 class TStep
 {
 friend class TScript;
@@ -92,10 +92,10 @@ public:
    virtual ~TStep();
    TStep* next() const;
    TStep* parent() const;
-   virtual TStepResult send(TMTPEvent* pEvent){return SRST_ERREND;}
-   virtual TStepResult recv(TMTPEvent* pEvent){return SRST_ERREND;}
+   virtual TStepResult send(TMPTEvent* pEvent){return SRST_ERREND;}
+   virtual TStepResult recv(TMPTEvent* pEvent){return SRST_ERREND;}
    virtual bool init(xmlNodePtr pNode)=0;
-   TStepResult  run(TMTPEvent* pEvent);
+   TStepResult  run(TMPTEvent* pEvent);
 protected:
    TProtocolType     m_protocol;
    TStepStatistics   m_st;

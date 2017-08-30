@@ -18,8 +18,8 @@ public:
    TTCPStep();
    ~TTCPStep();
    bool init(xmlNodePtr pNode);
-   TStepResult send(TMTPEvent* pEvent);
-   TStepResult recv(TMTPEvent* pEvent);
+   TStepResult send(TMPTEvent* pEvent);
+   TStepResult recv(TMPTEvent* pEvent);
 private:
    int      m_port;
    string   m_ip;

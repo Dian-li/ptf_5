@@ -16,20 +16,22 @@ enum TEventType
     ET_FTPCMD,
     ET_FTPDATA,
     ET_SQLRESULT,
-    ET_TIMEOUT
+    ET_TIMEOUT,
+    ET_CMD_START,
+    ET_CMD_STOP
 };
 
 enum TEventDirection
 {
     ED_RX,
-    EX_TX
+    ED_TX
 };
 
-class TMTPEvent
+class TMPTEvent
 {
 public:
-    TMTPEvent(){}
-    virtual ~TMTPEvent(){}
+    TMPTEvent(){}
+    virtual ~TMPTEvent(){}
     TEventType type() const {return m_type;}
     TEventDirection direction() const {return m_direction;}
 protected:

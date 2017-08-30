@@ -97,7 +97,7 @@ bool TTCPStep::init(xmlNodePtr pNode)
 }
 
 
-TStepResult TTCPStep::send(TMTPEvent * pEvent)
+TStepResult TTCPStep::send(TMPTEvent * pEvent)
 {
    if(ST_RECV == m_type)
    {
@@ -105,7 +105,7 @@ TStepResult TTCPStep::send(TMTPEvent * pEvent)
    }
 }
 
-TStepResult TTCPStep::recv(TMTPEvent * pEvent)
+TStepResult TTCPStep::recv(TMPTEvent * pEvent)
 {
    if(ST_SEND == m_type)
    {
