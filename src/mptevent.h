@@ -31,6 +31,11 @@ class TMPTEvent
 {
 public:
     TMPTEvent(){}
+    TMPTEvent(const TMPTEvent& e)
+    {
+        m_type = e.m_type;
+        m_direction = e.m_direction;
+    }
     virtual ~TMPTEvent(){}
     TEventType type() const {return m_type;}
     TEventDirection direction() const {return m_direction;}

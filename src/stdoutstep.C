@@ -6,6 +6,8 @@
 */
 
 #include <stdio.h>
+#include <pthread.h>
+
 #include "stdoutstep.h"
 #include "mptconst.h"
 
@@ -13,10 +15,9 @@ TStepResult TStdoutStep::send(TMPTEvent* pEvent)
 {
     if(likely(NULL != m_data.content))
     {
-        printf(m_data.content);
+        printf("%lu: %s\n", pthread_self(), m_data.content);
+        fflush(stdout);
     }
-    printf("\n");
-    fflush(stdout);
     return SRST_SUCC;
 }
 

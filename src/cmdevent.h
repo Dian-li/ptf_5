@@ -25,6 +25,13 @@ public:
         m_total = total;
         m_duration = duration;
     }
+    TCmdStartEvent(const TCmdStartEvent& e)
+    {
+        m_script = e.m_script;
+        m_tps = e.m_tps;
+        m_total = e.m_total;
+        m_duration = e.m_duration;
+    }
     ~TCmdStartEvent(){}
     TScript* getScript() const {return m_script;}
     int getTps() const {return m_tps;}

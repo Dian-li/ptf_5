@@ -78,10 +78,10 @@ void TManager::processHttpReq(struct evhttp_request *req)
     const char *decode_uri =  evhttp_request_get_uri(req) ;
     char *url = evhttp_decode_uri(decode_uri);
     evbuffer *buff = evbuffer_new();
+    printf( "[%s][%s]-->[%s]\n" , str , decode_uri, url);
     if(0==strcmp("/", url))
     {
         evbuffer_add(buff, "It works!", 9);
-        printf( "[%s][%s]-->[%s]\n" , str , decode_uri, url);
         evhttp_send_reply( req, HTTP_OK, "OK", buff);
     }
     else if(0 == strncmp("/ptf", url, 4))
@@ -112,17 +112,21 @@ void TManager::processHttpReq(struct evhttp_request *req)
                     evhttp_send_reply( req, HTTP_INTERNAL, "Internal Error", NULL);
                 }
                 else 
-                {
-                    TCmdStartEvent cmd(pScript, 2, 25, 0); 
+                {                    
                     if(0 == nId)
                     {
-                        m_threadPool.order(&cmd, -1);
+                        for(int i=0; i<m_threadPool.size(); ++i)
+                        {
+                            TCmdStartEvent *pCmd = new TCmdStartEvent(pScript, 2, 25, 0); 
+                            m_threadPool.order(pCmd, i);
+                        }
                     }
                     else
                     {
                         for(vector<int>::iterator iter = workers.begin(); iter != workers.end(); ++iter)
                         {
-                            m_threadPool.order(&cmd, *iter);
+                            TCmdStartEvent *pCmd = new TCmdStartEvent(pScript, 2, 25, 0);
+                            m_threadPool.order(pCmd, *iter);
                         }
                     }
                     evbuffer_add(buff, "start task successfully!", 24);
@@ -135,6 +139,14 @@ void TManager::processHttpReq(struct evhttp_request *req)
                 evhttp_send_reply( req, HTTP_INTERNAL, "Internal Error", NULL);
             }
         }
+        else
+        {
+            evhttp_send_reply( req, HTTP_NOTFOUND, "Not Found", NULL);
+        }
+    }
+    else
+    {
+        evhttp_send_reply( req, HTTP_NOTFOUND, "Not Found", NULL);
     }
 
     evbuffer_free(buff);

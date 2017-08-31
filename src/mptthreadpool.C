@@ -106,24 +106,7 @@ bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
             }
         }
     }
-    else
-    {
-        for(id=0; id < m_nCount; ++id)
-        {
-            ret = m_threads[id].m_queue->enqueue(pCmd);
-            if(likely(ret))
-            {
-                if(likely(write(m_threads[id].m_writeCmdEventFd, buf, 1) == 1))
-                {
-                    ret = true;
-                }
-                else
-                {
-                    perror("Fatal error, notify to worker failed.");
-                }
-            }
-        }
-    }
+    
     return ret;
 }
 
@@ -161,7 +144,7 @@ void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
                 break;
             default:;
             }
-            //delete pEvent; //TODO coredump
+            delete pEvent;
             pEvent = NULL;
         }
     //TODO
@@ -203,8 +186,8 @@ int TMptThreadPool::setupThread(TThreadData * data)
                 threadEventProcess,
                 data);
     event_base_set(data->m_base, &data->m_notifyEvent);
-    event_base_set(data->m_base, &data->m_timerEvent);
     evtimer_set(&data->m_timerEvent, TMptThreadPool::time_cb, data);
+    event_base_set(data->m_base, &data->m_timerEvent);
 
     if (unlikely(event_add(&data->m_notifyEvent, 0) == -1))
     {

@@ -64,7 +64,8 @@ public:
     TMptThreadPool();
     ~TMptThreadPool();
     int init(int nThread);
-    bool order(TMPTEvent* pCmd, int id=-1);
+    bool order(TMPTEvent* pCmd, int id);
+    int size() const {return m_nCount;}
 
 private:
     static void* workerFunc(void* arg);
