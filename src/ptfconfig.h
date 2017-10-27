@@ -34,9 +34,9 @@ protected:
 private:
     static TPTFConfig* m_instance;
     config_t* m_conf;
-    long m_managePort;
+    int m_managePort;
     const char* m_listenAddr;
-    long m_nWorker;
+    int m_nWorker;
 };
 
 #endif

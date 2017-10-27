@@ -67,7 +67,7 @@ int TMptThreadPool::init(int nThread)
     }
     for (int i = 0; i < m_nCount; ++i)
     {
-        int fds[2];
+        int fds[2];     //  管道，0-读，1-写；
         if (pipe(fds))
         {
             perror("Can't create pipes");
@@ -106,7 +106,7 @@ bool TMptThreadPool::order(TMPTEvent * pCmd, int id)
             }
         }
     }
-    
+
     return ret;
 }
 
@@ -117,7 +117,7 @@ void* TMptThreadPool::workerFunc(void * arg)
     return NULL;
 }
 
-void TMptThreadPool::threadEventProcess(int fd, short which, void *arg)
+void TMptThreadPool::threadEventProcess(int fd, short which, void *arg) //  文件描述符、事件类型、参数
 {
     TThreadData *me = (TThreadData*)arg;
     char buf[1];
@@ -181,10 +181,10 @@ int TMptThreadPool::setupThread(TThreadData * data)
         return -2;
     }
     event_set(&data->m_notifyEvent,
-                data->m_readCmdEventFd,
-                EV_READ | EV_PERSIST,
-                threadEventProcess,
-                data);
+                data->m_readCmdEventFd, //  文件描述符或者信号，对于定时事件，设为-1
+                EV_READ | EV_PERSIST,   //  事件类型
+                threadEventProcess,     //  回调函数
+                data);                  //  参数
     event_base_set(data->m_base, &data->m_notifyEvent);
     evtimer_set(&data->m_timerEvent, TMptThreadPool::time_cb, data);
     event_base_set(data->m_base, &data->m_timerEvent);

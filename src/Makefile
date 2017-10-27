@@ -97,7 +97,9 @@ PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_ptf_OBJECTS = httpevent.$(OBJEXT) main.$(OBJEXT) manager.$(OBJEXT) \
 	ptfconfig.$(OBJEXT) script.$(OBJEXT) transaction.$(OBJEXT) \
-	mptthreadpool.$(OBJEXT) hashtable/hashtable.$(OBJEXT) \
+	mptthreadpool.$(OBJEXT) step.$(OBJEXT) tcpstep.$(OBJEXT) \
+	stdoutstep.$(OBJEXT) socketpool.$(OBJEXT) \
+	hashtable/hashtable.$(OBJEXT) \
 	hashtable/hashtable_itr.$(OBJEXT)
 ptf_OBJECTS = $(am_ptf_OBJECTS)
 ptf_LDADD = $(LDADD)
@@ -188,12 +190,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/chengg/src/ptf/src/missing aclocal-1.14
+ACLOCAL = ${SHELL} /home/dian/code/ptf_5/src/missing aclocal-1.14
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
-AUTOCONF = ${SHELL} /home/chengg/src/ptf/src/missing autoconf
-AUTOHEADER = ${SHELL} /home/chengg/src/ptf/src/missing autoheader
-AUTOMAKE = ${SHELL} /home/chengg/src/ptf/src/missing automake-1.14
+AUTOCONF = ${SHELL} /home/dian/code/ptf_5/src/missing autoconf
+AUTOHEADER = ${SHELL} /home/dian/code/ptf_5/src/missing autoheader
+AUTOMAKE = ${SHELL} /home/dian/code/ptf_5/src/missing automake-1.14
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -219,9 +221,9 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lconfig -levent -lxml2
+LIBS = -lconfig -levent -lxml2 -lpthread  -ldl
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/chengg/src/ptf/src/missing makeinfo
+MAKEINFO = ${SHELL} /home/dian/code/ptf_5/src/missing makeinfo
 MKDIR_P = /bin/mkdir -p
 OBJEXT = o
 PACKAGE = ptf
@@ -233,13 +235,13 @@ PACKAGE_URL =
 PACKAGE_VERSION = 1.0.0
 PATH_SEPARATOR = :
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = 
 VERSION = 1.0.0
-abs_builddir = /home/chengg/src/ptf/src
-abs_srcdir = /home/chengg/src/ptf/src
-abs_top_builddir = /home/chengg/src/ptf/src
-abs_top_srcdir = /home/chengg/src/ptf/src
+abs_builddir = /home/dian/code/ptf_5/src
+abs_srcdir = /home/dian/code/ptf_5/src
+abs_top_builddir = /home/dian/code/ptf_5/src
+abs_top_srcdir = /home/dian/code/ptf_5/src
 ac_ct_CC = gcc
 ac_ct_CXX = g++
 am__include = include
@@ -259,7 +261,7 @@ host_alias =
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/chengg/src/ptf/src/install-sh
+install_sh = ${SHELL} /home/dian/code/ptf_5/src/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -281,10 +283,10 @@ top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign 
 ptf_SOURCES = httpevent.C  main.C  manager.C  ptfconfig.C  script.C  transaction.C \
-mptthreadpool.C \
+mptthreadpool.C step.C  tcpstep.C  stdoutstep.C socketpool.C\
 hashtable/hashtable.c  hashtable/hashtable_itr.c
 
-AM_CPPFLAGS = -Ihashtable
+AM_CPPFLAGS = -Ihashtable -I /usr/local/include/libxml2 -g -std=c++11
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -409,6 +411,10 @@ include ./$(DEPDIR)/manager.Po
 include ./$(DEPDIR)/mptthreadpool.Po
 include ./$(DEPDIR)/ptfconfig.Po
 include ./$(DEPDIR)/script.Po
+include ./$(DEPDIR)/socketpool.Po
+include ./$(DEPDIR)/stdoutstep.Po
+include ./$(DEPDIR)/step.Po
+include ./$(DEPDIR)/tcpstep.Po
 include ./$(DEPDIR)/transaction.Po
 include hashtable/$(DEPDIR)/hashtable.Po
 include hashtable/$(DEPDIR)/hashtable_itr.Po

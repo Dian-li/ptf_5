@@ -10,6 +10,7 @@
 #include <event2/buffer.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
 
 #include "manager.h"
 #include "ptfconfig.h"
@@ -42,8 +43,10 @@ int TManager::init()
 {
     int ret = startHttpServer();
     if(unlikely(0 != ret)) return ret;
+    printf("conf works:%d\n",TPTFConfig::getInstance()->getWorkers());
     ret = m_threadPool.init(TPTFConfig::getInstance()->getWorkers());
     if(unlikely(0 != ret)) return ret;
+
 }
 
 int TManager::startHttpServer()
@@ -62,7 +65,7 @@ int TManager::startHttpServer()
     evhttp_set_timeout(m_httpd, 120);
     evhttp_set_gencb(m_httpd, httpd_cb, this);
     //evhttp_set_cb(m_httpd, "/ptf", httpd_ptf_cb, this);
-    
+
     return 0;
 }
 
@@ -96,12 +99,16 @@ void TManager::processHttpReq(struct evhttp_request *req)
             {
                 *q = 0;
             }
-            TScript* pScript = new TScript(p);
+            printf("p(url) = %s\n", p);
+            TScript* pScript = new TScript(p);  //  deliver the xml file name
+
             if(NULL != q) *q = '/';
             bool ret = false;
             if(likely(NULL != pScript))
             {
-                ret = pScript->init();
+                printf("sccript != NULL ready to init()\n");
+                ret = pScript->init();  //  初始化一个执行step链表，存放在pScript->m_script中；
+                printf("ret = %d\n", ret);
             }
             if(likely(ret))
             {
@@ -111,18 +118,20 @@ void TManager::processHttpReq(struct evhttp_request *req)
                 {
                     evhttp_send_reply( req, HTTP_INTERNAL, "Internal Error", NULL);
                 }
-                else 
-                {                    
+                else
+                {
                     if(0 == nId)
                     {
+                        printf("nID==0 and pool size= %d\n",m_threadPool.size());
                         for(int i=0; i<m_threadPool.size(); ++i)
                         {
-                            TCmdStartEvent *pCmd = new TCmdStartEvent(pScript, 2, 25, 0); 
-                            m_threadPool.order(pCmd, i);
+                            TCmdStartEvent *pCmd = new TCmdStartEvent(pScript, 2, 25, 0);
+                            m_threadPool.order(pCmd, i);    //  worker thread depends on event;
                         }
                     }
                     else
                     {
+                        printf("nID=%d\n", nId);
                         for(vector<int>::iterator iter = workers.begin(); iter != workers.end(); ++iter)
                         {
                             TCmdStartEvent *pCmd = new TCmdStartEvent(pScript, 2, 25, 0);

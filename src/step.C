@@ -80,10 +80,12 @@ bool TStep::init(xmlNodePtr pNode)
    xmlChar* pValue = NULL;
    int      i = 0;
    int      length = 0;
+
    
    if(0 == xmlStrcmp(pNode->name, BAD_CAST("send")))
    {
       m_type = ST_SEND;
+       printf("send-event");
    }
    else if(0 == xmlStrcmp(pNode->name, BAD_CAST("recv")))
    {

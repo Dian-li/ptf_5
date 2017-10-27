@@ -13,6 +13,7 @@
 
 #include <libxml/parser.h>
 #include "st.h"
+#include "socketpool.h"
 
 enum TStepType
 {
@@ -45,7 +46,7 @@ struct TCode
 {
    int   length;
    char* content;
-   
+
    TCode()
    {
       length = 0;
@@ -65,7 +66,7 @@ struct TStepStatistics
    long double failure_duration; //s.us
    long double failure_max;
    long double failure_min;
-   
+
    TStepStatistics()
    {
       total_count = 0;

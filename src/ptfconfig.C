@@ -44,7 +44,9 @@ bool TPTFConfig::init(const char* file)
     config_t* conf = new config_t;
     config_init(conf);
     int ret = config_read_file(conf, pFile);
-    if(unlikely(0 != ret))
+    //config_lookup_int(conf, "workers", &m_nWorker);
+    //printf("m_nWorker:%d\n", m_nWorker);
+    if(unlikely(0 == ret))
     {
         printf("load config %s failed, configuration not changed.\n", pFile);
         return false;
@@ -61,6 +63,7 @@ bool TPTFConfig::init(const char* file)
     {
         m_nWorker = 4;
     }
+    printf("m_nWorker:%d\n", m_nWorker);
     return true;
 }
 

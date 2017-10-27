@@ -11,18 +11,27 @@
 #define _TCPSTEP_H
 
 #include "step.h"
+#include "socketpool.h"
 
-class TTCPStep : public TStep
-{
+class TTCPStep : public TStep {
 public:
-   TTCPStep();
-   ~TTCPStep();
-   bool init(xmlNodePtr pNode);
-   TStepResult send(TMPTEvent* pEvent);
-   TStepResult recv(TMPTEvent* pEvent);
+    TTCPStep();
+
+    ~TTCPStep();
+
+    bool init(xmlNodePtr pNode);
+
+    TStepResult send(TMPTEvent *pEvent);
+
+    TStepResult recv(TMPTEvent *pEvent);
+
 private:
-   int      m_port;
-   string   m_ip;
+    int    m_port;
+    string m_ip;
+    string m_result;
+    string m_connStr;
+    CSocket* m_cSocket;
+    CSocketPool * m_conn_socket;
 };
 
 #endif

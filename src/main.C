@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     TPTFConfig::getInstance()->print();
     TManager mgr;
     int ret = mgr.init();
-    printf("ret:%d\n", ret);
+    printf("ret from TManager init:%d\n", ret);
     if(unlikely(0 != ret))
     {
         exit(1);
