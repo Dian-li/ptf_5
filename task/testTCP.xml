@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <send protocol="TCP">
-        <wait>100</wait>
-        <ip>127.0.0.1</ip>
-        <port>8000</port>
-        <![CDATA[Hello]]>
-    </send>
-    <recv protocol="TCP">
-        <wait>100</wait>
-        <![CDATA[Hello, client]]>
-    </recv>
+  <send protocol="TCP">
+    <wait>100</wait>
+    <ip>127.0.0.1</ip>
+    <port>8000</port>
+    <![CDATA[Hello]]>
+  </send>
+  <recv protocol="TCP">
+    <wait>100</wait>
+    <![CDATA[Hello, client]]>
+  </recv>
+  <send protocol="TCP">
+    <wait>100</wait>
+    <ip>127.0.0.1</ip>
+    <port>8000</port>
+    <![CDATA[ByeBye]]>
+  </send>
+  <recv protocol="TCP">
+    <wait>100</wait>
+    <![CDATA[Hello, client]]>
+  </recv>
 </root>

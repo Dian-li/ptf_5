@@ -78,6 +78,7 @@ bool TScript::init() {
         }
         if (pLast) {
             pLast->m_next = pStep;
+            pStep->m_parent = pLast;
         }
         pNode = pNode->next;
         pLast = pStep;

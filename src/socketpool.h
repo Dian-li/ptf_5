@@ -11,6 +11,12 @@
 #include <netinet/in.h>
 #include <mutex>
 #include <unordered_map>
+#include <event2/listener.h>
+#include <event2/bufferevent.h>
+#include <event2/buffer.h>
+#include <event2/event.h>
+#include <vector>
+#include <pthread.h>
 
 
 #include "ringbuff.h"
@@ -21,23 +27,30 @@ class CSocket
 {
 public:
     CSocket();
-    CSocket(bool tcp,char* server_ip,uint16_t server_port); // 创建一个SOCKET，如果tcp为true，则创建TCP套接字，否则创建UDP套接字
+    CSocket(bool tcp,char* server_ip,uint16_t server_port,struct event_base * base); // 创建一个SOCKET，如果tcp为true，则创建TCP套接字，否则创建UDP套接字
     ~CSocket();
-    bool IsSSL() const; // 如果返回true，则表示支持SSL，否则不支持
-    void SetSSL(bool ssl); // 更新是否支持SSL标识
     int getSocketFd();
     char* getIP();
-    char* recvMsg();
-    bool sendMsg(char* bytes);
+    char* recvMsg(int sockfd);
+    bool sendMsg(char* bytes,int sockfd);
     uint16_t getPort();
 
+
 private:
-    bool ssl; // 否支持SSL标识
     int sockfd;
-    char recvbuff[4096];//接收缓冲区
+    struct evbuffer * readbuff;
+    struct evbuffer * writebuff;//not use
+    struct bufferevent *bev;
+    struct event * ev_cmd;
+    struct event_base * s_base;
     uint16_t server_port; // 服务端的监听端口
     char* server_ip; // 服务端监听的IP
     struct sockaddr_in    servaddr;
+
+    static void read_cb(struct bufferevent *bev, void *arg); //读
+    static void write_cb(struct bufferevent *bev, void *arg); //写
+    static void error_cb(struct bufferevent *bev, short event, void *arg);//错误
+    static void send_cb(int fd, short events, void *arg);
 };
 
 
@@ -55,9 +68,12 @@ public:
     int getSocket(uint32_t MilliSeconds) const ;
     int getSocket(char* server_ip,uint16_t server_port) const; // 返回句柄值
     int getSocket(char* server_ip,uint16_t server_port,uint32_t MilliSeconds)const ;
+
 private:
     int c_sCount;
     TRingbuffer<CSocket> *m_queue;
+    struct event_base *base;
+    static void* loop_event(void* arg);
 };
 
 static std::unordered_map<std::string, CSocketPool*>  csocket_map;

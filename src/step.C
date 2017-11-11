@@ -66,7 +66,8 @@ TStep* TStep::next() const
    }
    else
    {
-      return m_parent;
+      //return m_parent;
+      return NULL;
    }
 }
 

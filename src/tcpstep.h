@@ -28,7 +28,6 @@ public:
 private:
     int    m_port;
     string m_ip;
-    string m_result;
     string m_connStr;
     CSocket* m_cSocket;
     CSocketPool * m_conn_socket;

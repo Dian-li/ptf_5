@@ -103,8 +103,9 @@ TStepResult TTCPStep::send(TMPTEvent * pEvent)
     csocket_map_mutex.unlock();
     m_conn_socket = csocket_map[m_connStr];
     m_cSocket = m_conn_socket->getSocket();
-    m_cSocket->sendMsg(m_data.content);
-    std::cout<<"[send] :client:"<<m_data.content<<std::endl;
+    int fd = m_cSocket->getSocketFd();
+    m_cSocket->sendMsg(m_data.content,fd);
+    std::cout<<"[send client]"<<m_data.content<<std::endl;
 
     return SRST_SUCC;
 }
@@ -115,16 +116,16 @@ TStepResult TTCPStep::recv(TMPTEvent * pEvent)
    {
       return SRST_ERREND;
    }
-    if(m_cSocket == NULL){
-        printf("hahahah\n");
-    }
+    TTCPStep* sendStep = (TTCPStep*)this->m_parent;
+    m_conn_socket = sendStep->m_conn_socket;
+    m_cSocket = sendStep->m_cSocket;
+    int fd = m_cSocket->getSocketFd();
     string recvMsg = m_data.content;
-    m_result = m_cSocket->recvMsg();
-    std::cout<<"[send] :m_result"<<m_result<<std::endl;
-    std::cout<<"[recv] :got"<<recvMsg<<std::endl;
-    std::cout<<"[recv] :expect"<<m_result<<std::endl;
+    string result = m_cSocket->recvMsg(fd);
+    std::cout<<"[recv got]"<<recvMsg<<std::endl;
+    std::cout<<"[recv except]"<<result<<std::endl;
     m_conn_socket->backSocket(m_cSocket);
-    if(recvMsg==m_result){
+    if(recvMsg==result){
         return SRST_SUCC;
     }else{
         return SRST_ERREND;
