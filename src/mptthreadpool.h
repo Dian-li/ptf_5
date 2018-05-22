@@ -28,6 +28,7 @@ struct TTaskInfo
     int m_nCount;
     int m_nSecs;
     bool m_stopFlag;
+    TEventType m_type;
 
     TTaskInfo()
     {
@@ -38,6 +39,7 @@ struct TTaskInfo
         m_nCount = 0;
         m_nSecs = 0;
         m_stopFlag = false;
+        m_type = ET_UNDEFINED;
     }
 };
 
@@ -49,6 +51,7 @@ public:
     
     pthread_t  m_threadID;
     struct event_base *m_base;
+    struct event_base *m_httpbase;
     struct event m_notifyEvent;
     int m_writeCmdEventFd;
     int m_readCmdEventFd;
@@ -66,6 +69,8 @@ public:
     int init(int nThread);
     bool order(TMPTEvent* pCmd, int id);
     int size() const {return m_nCount;}
+    void initConnect(int i,TScript *tScript,CSocket *cSocket);
+    void initHttpConnect(int i);
 
 private:
     static void* workerFunc(void* arg);
@@ -81,6 +86,9 @@ private:
     int m_nCount;
     TThreadData* m_threads;
 };
+
+ extern std::unordered_map<pthread_t, Connection*>  cps_map;
+ extern std::mutex                               cps_map_mutex;
 
 #endif
 

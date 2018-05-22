@@ -101,7 +101,7 @@ public:
         unsigned int h, t;
         h = m_head;
         t = m_tail;
-        return (h < t ? t-h : m_size-h+t);
+        return (h <= t ? t-h : m_size-h+t);
     }
 
 private:

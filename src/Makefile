@@ -98,9 +98,10 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_ptf_OBJECTS = httpevent.$(OBJEXT) main.$(OBJEXT) manager.$(OBJEXT) \
 	ptfconfig.$(OBJEXT) script.$(OBJEXT) transaction.$(OBJEXT) \
 	mptthreadpool.$(OBJEXT) step.$(OBJEXT) tcpstep.$(OBJEXT) \
-	stdoutstep.$(OBJEXT) socketpool.$(OBJEXT) \
-	hashtable/hashtable.$(OBJEXT) \
-	hashtable/hashtable_itr.$(OBJEXT)
+	stdoutstep.$(OBJEXT) tcpevent.$(OBJEXT) socketpool.$(OBJEXT) \
+	timeoutqueue.$(OBJEXT) hashtable/hashtable.$(OBJEXT) \
+	hashtable/hashtable_itr.$(OBJEXT) protocol.$(OBJEXT) \
+	httpstep.$(OBJEXT) httpparser.$(OBJEXT) jsoncpp.$(OBJEXT)
 ptf_OBJECTS = $(am_ptf_OBJECTS)
 ptf_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
@@ -221,7 +222,7 @@ INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -lconfig -levent -lxml2 -lpthread  -ldl
+LIBS = -lconfig -levent -lxml2 -lpthread  -ldl -lhttp_parser -lhiredis
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/dian/code/ptf_5/src/missing makeinfo
 MKDIR_P = /bin/mkdir -p
@@ -283,15 +284,15 @@ top_builddir = .
 top_srcdir = .
 AUTOMAKE_OPTIONS = foreign 
 ptf_SOURCES = httpevent.C  main.C  manager.C  ptfconfig.C  script.C  transaction.C \
-mptthreadpool.C step.C  tcpstep.C  stdoutstep.C socketpool.C\
-hashtable/hashtable.c  hashtable/hashtable_itr.c
+mptthreadpool.C step.C  tcpstep.C  stdoutstep.C tcpevent.C socketpool.C timeoutqueue.C\
+hashtable/hashtable.c  hashtable/hashtable_itr.c protocol.C  httpstep.C  httpparser.cpp jsoncpp.cpp
 
-AM_CPPFLAGS = -Ihashtable -I /usr/local/include/libxml2 -g -std=c++11
+AM_CPPFLAGS = -Ihashtable -I /usr/local/include/libxml2 -L /usr/local/lib -g -std=c++11
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .C .c .o .obj
+.SUFFIXES: .C .c .cpp .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -406,15 +407,21 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/httpevent.Po
+include ./$(DEPDIR)/httpparser.Po
+include ./$(DEPDIR)/httpstep.Po
+include ./$(DEPDIR)/jsoncpp.Po
 include ./$(DEPDIR)/main.Po
 include ./$(DEPDIR)/manager.Po
 include ./$(DEPDIR)/mptthreadpool.Po
+include ./$(DEPDIR)/protocol.Po
 include ./$(DEPDIR)/ptfconfig.Po
 include ./$(DEPDIR)/script.Po
 include ./$(DEPDIR)/socketpool.Po
 include ./$(DEPDIR)/stdoutstep.Po
 include ./$(DEPDIR)/step.Po
+include ./$(DEPDIR)/tcpevent.Po
 include ./$(DEPDIR)/tcpstep.Po
+include ./$(DEPDIR)/timeoutqueue.Po
 include ./$(DEPDIR)/transaction.Po
 include hashtable/$(DEPDIR)/hashtable.Po
 include hashtable/$(DEPDIR)/hashtable_itr.Po
@@ -450,6 +457,22 @@ include hashtable/$(DEPDIR)/hashtable_itr.Po
 #	$(AM_V_CC)source='$<' object='$@' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+.cpp.o:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ $<
+
+.cpp.obj:
+	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.obj$$||'`;\
+	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ `$(CYGPATH_W) '$<'` &&\
+	$(am__mv) $$depbase.Tpo $$depbase.Po
+#	$(AM_V_CXX)source='$<' object='$@' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

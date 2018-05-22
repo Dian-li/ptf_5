@@ -124,7 +124,8 @@ socketpool.o: socketpool.C /usr/include/stdc-predef.h \
  /usr/local/include/event2/event-config.h \
  /usr/include/x86_64-linux-gnu/sys/time.h /usr/include/netdb.h \
  /usr/include/rpc/netdb.h /usr/include/x86_64-linux-gnu/bits/siginfo.h \
- /usr/include/x86_64-linux-gnu/bits/netdb.h socketpool.h \
+ /usr/include/x86_64-linux-gnu/bits/netdb.h \
+ /usr/local/include/event2/dns.h mptevent.h socketpool.h \
  /usr/include/c++/4.8/mutex /usr/include/c++/4.8/tuple \
  /usr/include/c++/4.8/utility /usr/include/c++/4.8/bits/stl_relops.h \
  /usr/include/c++/4.8/array /usr/include/c++/4.8/stdexcept \
@@ -141,14 +142,20 @@ socketpool.o: socketpool.C /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/unordered_map.h \
  /usr/local/include/event2/listener.h /usr/local/include/event2/event.h \
  /usr/local/include/event2/bufferevent.h \
- /usr/local/include/event2/buffer.h /usr/include/c++/4.8/vector \
- /usr/include/c++/4.8/bits/stl_construct.h \
+ /usr/local/include/event2/buffer.h /usr/local/include/event2/http.h \
+ /usr/include/c++/4.8/vector /usr/include/c++/4.8/bits/stl_construct.h \
  /usr/include/c++/4.8/ext/alloc_traits.h \
  /usr/include/c++/4.8/bits/stl_uninitialized.h \
  /usr/include/c++/4.8/bits/stl_vector.h \
  /usr/include/c++/4.8/bits/stl_bvector.h \
- /usr/include/c++/4.8/bits/vector.tcc ringbuff.h /usr/include/assert.h \
- atomic.h
+ /usr/include/c++/4.8/bits/vector.tcc /usr/include/c++/4.8/set \
+ /usr/include/c++/4.8/bits/stl_tree.h /usr/include/c++/4.8/bits/stl_set.h \
+ /usr/include/c++/4.8/bits/stl_multiset.h /usr/include/c++/4.8/queue \
+ /usr/include/c++/4.8/deque /usr/include/c++/4.8/bits/stl_deque.h \
+ /usr/include/c++/4.8/bits/deque.tcc /usr/include/c++/4.8/bits/stl_heap.h \
+ /usr/include/c++/4.8/bits/stl_queue.h timeoutqueue.h protocol.h \
+ /usr/include/libconfig.h tcpevent.h transaction.h ringbuff.h \
+ /usr/include/assert.h atomic.h
 
 /usr/include/stdc-predef.h:
 
@@ -476,6 +483,10 @@ socketpool.o: socketpool.C /usr/include/stdc-predef.h \
 
 /usr/include/x86_64-linux-gnu/bits/netdb.h:
 
+/usr/local/include/event2/dns.h:
+
+mptevent.h:
+
 socketpool.h:
 
 /usr/include/c++/4.8/mutex:
@@ -528,6 +539,8 @@ socketpool.h:
 
 /usr/local/include/event2/buffer.h:
 
+/usr/local/include/event2/http.h:
+
 /usr/include/c++/4.8/vector:
 
 /usr/include/c++/4.8/bits/stl_construct.h:
@@ -541,6 +554,36 @@ socketpool.h:
 /usr/include/c++/4.8/bits/stl_bvector.h:
 
 /usr/include/c++/4.8/bits/vector.tcc:
+
+/usr/include/c++/4.8/set:
+
+/usr/include/c++/4.8/bits/stl_tree.h:
+
+/usr/include/c++/4.8/bits/stl_set.h:
+
+/usr/include/c++/4.8/bits/stl_multiset.h:
+
+/usr/include/c++/4.8/queue:
+
+/usr/include/c++/4.8/deque:
+
+/usr/include/c++/4.8/bits/stl_deque.h:
+
+/usr/include/c++/4.8/bits/deque.tcc:
+
+/usr/include/c++/4.8/bits/stl_heap.h:
+
+/usr/include/c++/4.8/bits/stl_queue.h:
+
+timeoutqueue.h:
+
+protocol.h:
+
+/usr/include/libconfig.h:
+
+tcpevent.h:
+
+transaction.h:
 
 ringbuff.h:
 

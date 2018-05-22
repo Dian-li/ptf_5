@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <send protocol="RMDB">
+        <wait>100</wait>
+        <protocol>postgresql</protocol>
+        <host>127.0.0.1</host>
+        <port>5432</port>
+        <username>postgres</username>
+        <password>123</password>
+        <db_name>exampledb</db_name>
+        <sql>select * from student</sql>
+    </send>
+    <recv protocol="RMDB">
+        <wait>100</wait>
+        <result>true</result>
+    </recv>
+</root>
+

@@ -121,16 +121,28 @@ manager.o: manager.C /usr/include/stdc-predef.h \
  /usr/include/c++/4.8/bits/locale_facets.tcc \
  /usr/include/c++/4.8/bits/basic_ios.tcc \
  /usr/include/c++/4.8/bits/ostream.tcc /usr/include/c++/4.8/istream \
- /usr/include/c++/4.8/bits/istream.tcc manager.h \
+ /usr/include/c++/4.8/bits/istream.tcc /usr/include/c++/4.8/map \
+ /usr/include/c++/4.8/bits/stl_tree.h \
+ /usr/include/c++/4.8/bits/alloc_traits.h \
+ /usr/include/c++/4.8/bits/ptr_traits.h \
+ /usr/include/c++/4.8/bits/stl_map.h /usr/include/c++/4.8/tuple \
+ /usr/include/c++/4.8/utility /usr/include/c++/4.8/bits/stl_relops.h \
+ /usr/include/c++/4.8/array /usr/include/c++/4.8/stdexcept \
+ /usr/include/c++/4.8/bits/uses_allocator.h \
+ /usr/include/c++/4.8/bits/stl_multimap.h /usr/include/c++/4.8/fstream \
+ /usr/include/c++/4.8/bits/codecvt.h \
+ /usr/include/x86_64-linux-gnu/c++/4.8/bits/basic_file.h \
+ /usr/include/x86_64-linux-gnu/c++/4.8/bits/c++io.h \
+ /usr/include/c++/4.8/bits/fstream.tcc manager.h \
  /usr/local/include/event2/event.h /usr/local/include/event2/http.h \
  /usr/include/c++/4.8/vector /usr/include/c++/4.8/bits/stl_construct.h \
  /usr/include/c++/4.8/ext/alloc_traits.h \
- /usr/include/c++/4.8/bits/alloc_traits.h \
- /usr/include/c++/4.8/bits/ptr_traits.h \
  /usr/include/c++/4.8/bits/stl_uninitialized.h \
  /usr/include/c++/4.8/bits/stl_vector.h \
  /usr/include/c++/4.8/bits/stl_bvector.h \
- /usr/include/c++/4.8/bits/vector.tcc mptthreadpool.h \
+ /usr/include/c++/4.8/bits/vector.tcc /usr/include/c++/4.8/set \
+ /usr/include/c++/4.8/bits/stl_set.h \
+ /usr/include/c++/4.8/bits/stl_multiset.h mptthreadpool.h \
  /usr/local/include/event.h /usr/local/include/evutil.h \
  /usr/local/include/event2/event_struct.h \
  /usr/local/include/event2/keyvalq_struct.h \
@@ -141,6 +153,13 @@ manager.o: manager.C /usr/include/stdc-predef.h \
  /usr/local/include/event2/bufferevent_compat.h \
  /usr/local/include/event2/tag.h /usr/local/include/event2/tag_compat.h \
  ringbuff.h /usr/include/assert.h atomic.h mptevent.h cmdevent.h script.h \
+ redis.h /usr/include/c++/4.8/mutex /usr/include/c++/4.8/chrono \
+ /usr/include/c++/4.8/ratio /usr/include/c++/4.8/limits \
+ /usr/include/c++/4.8/ctime /usr/include/c++/4.8/functional \
+ /usr/include/c++/4.8/typeinfo /usr/include/c++/4.8/system_error \
+ /usr/include/x86_64-linux-gnu/c++/4.8/bits/error_constants.h \
+ /usr/local/include/hiredis/hiredis.h /usr/local/include/hiredis/read.h \
+ /usr/local/include/hiredis/sds.h \
  /usr/local/include/libxml2/libxml/parser.h \
  /usr/local/include/libxml2/libxml/xmlversion.h \
  /usr/local/include/libxml2/libxml/xmlexports.h \
@@ -168,8 +187,18 @@ manager.o: manager.C /usr/include/stdc-predef.h \
  /usr/local/include/libxml2/libxml/xlink.h \
  /usr/local/include/libxml2/libxml/SAX2.h \
  /usr/local/include/libxml2/libxml/xmlmemory.h \
- /usr/local/include/libxml2/libxml/threads.h ptfconfig.h \
- /usr/include/libconfig.h mptconst.h
+ /usr/local/include/libxml2/libxml/threads.h socketpool.h \
+ /usr/include/c++/4.8/unordered_map /usr/include/c++/4.8/bits/hashtable.h \
+ /usr/include/c++/4.8/bits/hashtable_policy.h \
+ /usr/include/c++/4.8/bits/unordered_map.h \
+ /usr/local/include/event2/listener.h /usr/include/c++/4.8/queue \
+ /usr/include/c++/4.8/deque /usr/include/c++/4.8/bits/stl_deque.h \
+ /usr/include/c++/4.8/bits/deque.tcc /usr/include/c++/4.8/bits/stl_heap.h \
+ /usr/include/c++/4.8/bits/stl_queue.h timeoutqueue.h protocol.h \
+ /usr/include/libconfig.h /usr/include/c++/4.8/cstring transaction.h \
+ ptfconfig.h mptconst.h json/json.h /usr/include/c++/4.8/stack \
+ /usr/include/c++/4.8/bits/stl_stack.h /usr/include/c++/4.8/sstream \
+ /usr/include/c++/4.8/bits/sstream.tcc
 
 /usr/include/stdc-predef.h:
 
@@ -483,6 +512,40 @@ manager.o: manager.C /usr/include/stdc-predef.h \
 
 /usr/include/c++/4.8/bits/istream.tcc:
 
+/usr/include/c++/4.8/map:
+
+/usr/include/c++/4.8/bits/stl_tree.h:
+
+/usr/include/c++/4.8/bits/alloc_traits.h:
+
+/usr/include/c++/4.8/bits/ptr_traits.h:
+
+/usr/include/c++/4.8/bits/stl_map.h:
+
+/usr/include/c++/4.8/tuple:
+
+/usr/include/c++/4.8/utility:
+
+/usr/include/c++/4.8/bits/stl_relops.h:
+
+/usr/include/c++/4.8/array:
+
+/usr/include/c++/4.8/stdexcept:
+
+/usr/include/c++/4.8/bits/uses_allocator.h:
+
+/usr/include/c++/4.8/bits/stl_multimap.h:
+
+/usr/include/c++/4.8/fstream:
+
+/usr/include/c++/4.8/bits/codecvt.h:
+
+/usr/include/x86_64-linux-gnu/c++/4.8/bits/basic_file.h:
+
+/usr/include/x86_64-linux-gnu/c++/4.8/bits/c++io.h:
+
+/usr/include/c++/4.8/bits/fstream.tcc:
+
 manager.h:
 
 /usr/local/include/event2/event.h:
@@ -495,10 +558,6 @@ manager.h:
 
 /usr/include/c++/4.8/ext/alloc_traits.h:
 
-/usr/include/c++/4.8/bits/alloc_traits.h:
-
-/usr/include/c++/4.8/bits/ptr_traits.h:
-
 /usr/include/c++/4.8/bits/stl_uninitialized.h:
 
 /usr/include/c++/4.8/bits/stl_vector.h:
@@ -506,6 +565,12 @@ manager.h:
 /usr/include/c++/4.8/bits/stl_bvector.h:
 
 /usr/include/c++/4.8/bits/vector.tcc:
+
+/usr/include/c++/4.8/set:
+
+/usr/include/c++/4.8/bits/stl_set.h:
+
+/usr/include/c++/4.8/bits/stl_multiset.h:
 
 mptthreadpool.h:
 
@@ -542,6 +607,32 @@ mptevent.h:
 cmdevent.h:
 
 script.h:
+
+redis.h:
+
+/usr/include/c++/4.8/mutex:
+
+/usr/include/c++/4.8/chrono:
+
+/usr/include/c++/4.8/ratio:
+
+/usr/include/c++/4.8/limits:
+
+/usr/include/c++/4.8/ctime:
+
+/usr/include/c++/4.8/functional:
+
+/usr/include/c++/4.8/typeinfo:
+
+/usr/include/c++/4.8/system_error:
+
+/usr/include/x86_64-linux-gnu/c++/4.8/bits/error_constants.h:
+
+/usr/local/include/hiredis/hiredis.h:
+
+/usr/local/include/hiredis/read.h:
+
+/usr/local/include/hiredis/sds.h:
 
 /usr/local/include/libxml2/libxml/parser.h:
 
@@ -603,8 +694,50 @@ script.h:
 
 /usr/local/include/libxml2/libxml/threads.h:
 
-ptfconfig.h:
+socketpool.h:
+
+/usr/include/c++/4.8/unordered_map:
+
+/usr/include/c++/4.8/bits/hashtable.h:
+
+/usr/include/c++/4.8/bits/hashtable_policy.h:
+
+/usr/include/c++/4.8/bits/unordered_map.h:
+
+/usr/local/include/event2/listener.h:
+
+/usr/include/c++/4.8/queue:
+
+/usr/include/c++/4.8/deque:
+
+/usr/include/c++/4.8/bits/stl_deque.h:
+
+/usr/include/c++/4.8/bits/deque.tcc:
+
+/usr/include/c++/4.8/bits/stl_heap.h:
+
+/usr/include/c++/4.8/bits/stl_queue.h:
+
+timeoutqueue.h:
+
+protocol.h:
 
 /usr/include/libconfig.h:
 
+/usr/include/c++/4.8/cstring:
+
+transaction.h:
+
+ptfconfig.h:
+
 mptconst.h:
+
+json/json.h:
+
+/usr/include/c++/4.8/stack:
+
+/usr/include/c++/4.8/bits/stl_stack.h:
+
+/usr/include/c++/4.8/sstream:
+
+/usr/include/c++/4.8/bits/sstream.tcc:

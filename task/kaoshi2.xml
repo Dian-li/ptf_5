@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <send protocol="HTTP">
+    <wait>1</wait>
+    <host>kaoshi.meet2003.com</host>
+    <url>/</url>
+    <header><![CDATA[GET http://kaoshi.meet2003.com/ HTTP/1.1
+Host: kaoshi.meet2003.com
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9
+
+]]></header>
+    <body><![CDATA[]]></body>
+  </send>
+  <recv protocol="HTTP">
+    <wait>1</wait>
+    <status>302</status>
+    <host>kaoshi.meet2003.com</host>
+    <url>/</url>
+    <content_type>text/html; charset=utf-8</content_type>
+    <header><![CDATA[HTTP/1.1 302 Moved Temporarily
+Server: nginx
+Date: Sun, 22 Apr 2018 03:18:22 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+X-Powered-By: PHP/5.6.31
+Set-Cookie: PHPSESSID=h9012rh4cuvcmdjlhrh186dte5; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Pragma: no-cache
+P3P: CP=CAO PSA OUR
+Set-Cookie: exam_psid=h9012rh4cuvcmdjlhrh186dte5; expires=Mon, 23-Apr-2018 03:18:22 GMT; Max-Age=86400; path=/
+location: index.php?user-app-login
+Content-Length: 3
+
+]]></header>
+    <body><![CDATA[﻿
+]]></body>
+  </recv>
+ </root>

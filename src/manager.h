@@ -13,9 +13,12 @@
 #include <event2/event.h>
 #include <event2/http.h>
 #include <vector>
-using std::vector;
-
+#include <set>
 #include "mptthreadpool.h"
+#include "socketpool.h"
+using std::vector;
+using std::set;
+
 
 class TManager
 {
@@ -25,6 +28,7 @@ public:
     int init();
     void loop();
     void processHttpReq(struct evhttp_request *req);
+    void createSocketPool();
 
 private:
     int startHttpServer();
@@ -39,6 +43,11 @@ private:
     struct event_base *m_base;
     struct evhttp *m_httpd;
     TMptThreadPool m_threadPool;
+    CSocketPool * cSocketPool;
+    set<TTransation *> m_overtime_queue;
 };
+
+static std::unordered_map<std::string, CSocketPool*>  csocket_map;
+static std::mutex                                csocket_map_mutex;
 
 #endif

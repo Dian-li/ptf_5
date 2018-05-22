@@ -20,6 +20,8 @@ public:
     THttpEvent(TEventDirection direct, struct evhttp_request* pMsg);
     ~THttpEvent();
     bool isRequest();
+    int response_code;
+	struct evbuffer* inputbuffer;
     enum evhttp_cmd_type getCmdType();
 private:
     struct evhttp_request* m_httpMsg;

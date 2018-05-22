@@ -11,6 +11,7 @@
 #define _TCPSTEP_H
 
 #include "step.h"
+#include "mptthreadpool.h"
 #include "socketpool.h"
 
 class TTCPStep : public TStep {
@@ -25,12 +26,20 @@ public:
 
     TStepResult recv(TMPTEvent *pEvent);
 
+    void supsend();
+
+    void suprecv();
+
 private:
     int    m_port;
     string m_ip;
     string m_connStr;
     CSocket* m_cSocket;
     CSocketPool * m_conn_socket;
+
 };
+
+//extern std::unordered_map<pthread_t, CSocket*>  cps_map;
+//extern std::mutex                               cps_map_mutex;
 
 #endif

@@ -11,6 +11,8 @@
 #define _TRANSACTION_H
 
 #include "ringbuff.h"
+#include "timeoutqueue.h"
+//#include "socketpool.h"
 
 class TMPTEvent;
 class TScript;
@@ -23,12 +25,20 @@ public:
     ~TTransation();
     bool pushEvent(TMPTEvent* pEvent);
     int onEvent();
+    void setOverTime(int overtime);
+    int getOverTime();
+    void setTimeoutNode(TimeoutNode* node);
+    TimeoutNode* getTimeoutNode();
+    struct event_base *m_base;
 private:
     TRingbuffer<TMPTEvent> *m_pMsgQueue;
     TMPTEvent* m_pCurEvent;
-    struct event_base *m_base;
     TScript* m_pScript;
     TStep*   m_curStep;
+    bool isSend;
+    int times;
+
+    TimeoutNode* m_node;
 };
 
 #endif

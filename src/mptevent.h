@@ -15,10 +15,13 @@ enum TEventType
     ET_HTTP,
     ET_FTPCMD,
     ET_FTPDATA,
+    ET_TCPDATA,
     ET_SQLRESULT,
     ET_TIMEOUT,
+    ET_ERROR,
     ET_CMD_START,
-    ET_CMD_STOP
+    ET_CMD_STOP,
+	ET_UNDEFINED
 };
 
 enum TEventDirection
