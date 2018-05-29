@@ -148,7 +148,7 @@ void TMptThreadPool::time_cb(evutil_socket_t fd, short event, void *arg) {
   bool ret = runTask(pThrData);
   if (likely(ret)) {
     struct timeval tv;
-    tv.tv_sec = 1;
+    tv.tv_sec = 0;
     tv.tv_usec = 0;
     evtimer_add(&pThrData->m_timerEvent, &tv);
   } else {
@@ -200,7 +200,7 @@ bool TMptThreadPool::startTask(TCmdStartEvent * pCmd, TThreadData* pThrData) {
   bool ret = runTask(pThrData);
   if (likely(ret)) {
     struct timeval tv;
-    tv.tv_sec = 1;
+    tv.tv_sec = 0;
     tv.tv_usec = 0;
     evtimer_add(&pThrData->m_timerEvent, &tv);
   }
