@@ -1,0 +1,3 @@
+m4trace:aclocal.m4:679: -1- AC_SUBST([am__quote])
+m4trace:aclocal.m4:679: -1- AC_SUBST_TRACE([am__quote])
+m4trace:aclocal.m4:679: -1- m4_pattern_allow([^am__quote$])

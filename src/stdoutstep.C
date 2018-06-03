@@ -15,7 +15,7 @@ TStepResult TStdoutStep::send(TMPTEvent* pEvent)
 {
     if(likely(NULL != m_data.content))
     {
-        printf("%lu: %s\n", pthread_self(), m_data.content);
+        printf("%lu: %s\n", (unsigned long)pthread_self(), m_data.content);
         fflush(stdout);
     }
     return SRST_SUCC;

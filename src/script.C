@@ -176,7 +176,7 @@ TStep *TScript::initProperty(xmlNodePtr pNode) {
 					} else {
 						printf(
 								"TTCPStep init() get destination ip address failed !\n");
-						return false;
+						return NULL;
 					}
 				} else if (string(node_name) == "port") {
 					if (NULL != node_value) {
@@ -184,7 +184,7 @@ TStep *TScript::initProperty(xmlNodePtr pNode) {
 					} else {
 						printf(
 								"TTCPStep init() get destination port failed !\n");
-						return false;
+						return NULL;
 					}
 				}
 				pChildNode = pChildNode->next;

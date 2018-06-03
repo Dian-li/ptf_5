@@ -6,7 +6,7 @@
 #define STRINGEXCHANGE_HTTPPARSER_H
 
 #include <map>
-#include <cstring>
+#include <string>
 using std::map;
 using std::string;
 

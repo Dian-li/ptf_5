@@ -10,8 +10,11 @@
 #ifndef _ATOMIC_H
 #define _ATOMIC_H
 
+
 #ifdef __linux__
 #define CAS(PTR, OLD, NEW) __sync_bool_compare_and_swap(PTR, OLD, NEW)
+#elif __APPLE__
+#define CAS(PTR, OLD, NEW) __sync_val_compare_and_swap(PTR, OLD, NEW)
 #else
 #error Need to define CAS 
 #endif

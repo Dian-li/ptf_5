@@ -43,7 +43,7 @@ private:
     struct event_base *m_base;
     struct evhttp *m_httpd;
     TMptThreadPool m_threadPool;
-    CSocketPool * cSocketPool;
+    //CSocketPool * cSocketPool;
     set<TTransation *> m_overtime_queue;
 };
 

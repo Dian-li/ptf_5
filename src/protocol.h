@@ -16,9 +16,9 @@ private:
 #  define MaxProtocolNameLength 32
 	char name[MaxProtocolNameLength]; //协议名称
 
-# define st_fixed_length 0　//固定消息长度
-# define st_separator 1　　//切割符
-# define st_head_body 2　　//切割符分割消息头与消息体
+# define st_fixed_length 0 //固定消息长度
+# define st_separator 1 //切割符
+# define st_head_body 2 //切割符分割消息头与消息体
 	int separateType; //切割类型
 
 #  define MaxSeparateStrLength 32

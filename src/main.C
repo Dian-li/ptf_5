@@ -15,17 +15,15 @@
 #include "manager.h"
 #include "mptconst.h"
 
-int main(int argc, char* argv[])
-{
-    TPTFConfig::getInstance()->init("ptf.conf");
-    TPTFConfig::getInstance()->print();
-    TManager mgr;
-    int ret = mgr.init();
-    printf("ret from TManager init:%d\n", ret);
-    if(unlikely(0 != ret))
-    {
-        exit(1);
-    }
-    mgr.loop();
-    return 0;
+int main(int argc, char *argv[]) {
+  TPTFConfig::getInstance()->init("ptf.conf");
+  TPTFConfig::getInstance()->print();
+  TManager mgr;
+  int ret = mgr.init();
+  printf("ret from TManager init:%d\n", ret);
+  if (unlikely(0 != ret)) {
+    exit(1);
+  }
+  mgr.loop();
+  return 0;
 }
